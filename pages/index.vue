@@ -53,10 +53,6 @@ export default {
   padding-bottom: 16px;
 }
 
-.logo {
-  width: 500px;
-}
-
 .desc {
   color: #2329D6;
   font-size: 36px;
@@ -72,5 +68,17 @@ export default {
   top: 50%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+}
+
+@media screen and (max-width: 500px) {
+  .logo img{
+    display: block;
+    margin: 0 auto;
+  }
+
+  .title {
+    font-size: 72px;
+    display: block;
+  }
 }
 </style>
