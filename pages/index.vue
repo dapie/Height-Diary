@@ -53,6 +53,10 @@ export default {
   padding-bottom: 16px;
 }
 
+.logo {
+  width: 500px;
+}
+
 .desc {
   color: #2329D6;
   font-size: 36px;
@@ -64,8 +68,6 @@ export default {
 }
 
 .container {
-  width: 100%;
-  min-width: 500px;
   position: absolute;
   top: 50%;
   -ms-transform: translateY(-50%);
