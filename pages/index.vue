@@ -66,6 +66,7 @@ export default {
 }
 
 .container {
+  min-width: 500px;
   position: absolute;
   top: 50%;
   -ms-transform: translateY(-50%);
