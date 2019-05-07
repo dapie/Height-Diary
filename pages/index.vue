@@ -9,13 +9,13 @@
     </p>
     <button class="button filled">Регистрация</button>
     <button class="button">Вход</button>
-    <ul class="users">
+<!--     <ul class="users">
       <li v-for="(user, index) in users" :key="index" class="user">
         <nuxt-link :to="{ name: 'id', params: { id: index }}">
           {{ user.name }}
         </nuxt-link>
       </li>
-    </ul>
+    </ul> -->
   </section>
 </template>
 
@@ -46,8 +46,6 @@ export default {
   font-size: 120px;
   display: inline-block;
   vertical-align: bottom;
-  margin: 0;
-  padding: 0;
 }
 
 .logo img {
@@ -66,6 +64,7 @@ export default {
 }
 
 .container {
+  width: 100%;
   min-width: 500px;
   position: absolute;
   top: 50%;
