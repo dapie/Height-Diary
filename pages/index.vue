@@ -7,8 +7,12 @@
     <p class="desc">
       Следи за своим ростом удобно
     </p>
-    <button class="button filled">Регистрация</button>
-    <button class="button">Вход</button>
+    <nuxt-link to="/register">
+      <button class="button filled">Регистрация</button>
+    </nuxt-link>
+    <nuxt-link to="/login">
+      <button class="button">Вход</button>
+    </nuxt-link>
 <!--     <ul class="users">
       <li v-for="(user, index) in users" :key="index" class="user">
         <nuxt-link :to="{ name: 'id', params: { id: index }}">
@@ -64,10 +68,7 @@ export default {
 }
 
 .container {
-  position: absolute;
-  top: 50%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
+  text-align: center;
 }
 
 @media screen and (max-width: 500px) {

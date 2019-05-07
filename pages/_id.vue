@@ -24,7 +24,7 @@ export default {
         return { user: res.data }
       })
       .catch((e) => {
-        error({ statusCode: 404, message: 'User not found' })
+        error({ statusCode: 404, message: 'Page not found' })
       })
   },
   head () {
