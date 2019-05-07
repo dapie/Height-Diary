@@ -4,10 +4,10 @@ const express = require('express')
 const app = express()
 
 // Require API routes
-const users = require('./routes/users')
+const height = require('./routes/height')
 
 // Import API Routes
-app.use(users)
+app.use(height)
 
 // Export the server middleware
 module.exports = {

@@ -12,6 +12,12 @@ const users = [
 /* GET users listing. */
 router.get('/users', function (req, res, next) {
   res.json(users)
+   let height = 180,
+    user_id = 1,
+    timestamp = new Date();
+  database.write(() => {
+    database.create('Height', {user_id: title, height: height, timestamp: timestamp});
+  });
 })
 
 /* GET user by ID. */

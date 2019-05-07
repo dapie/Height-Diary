@@ -1,5 +1,20 @@
 <template>
   <footer>
-    Visit our website for more documentation : <a href="https://nuxtjs.org" target="_blank">nuxtjs.org</a>
+  	<div class="text">
+    	Made with 💙 by <a href="https://vk.com/dapie">dapie</a>
+    </div>
   </footer>
 </template>
+
+<style>
+footer{
+  text-align: center;
+  font-family: 'Montserrat';
+  width: 100%;
+}
+
+footer a{
+	text-decoration: none;
+	color: #2329D6;
+}
+</style>

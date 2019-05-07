@@ -1,28 +1,26 @@
-html, body
-{
+html, body {
   background-color: #fff;
-  color: #000;
-  letter-spacing: 0.5px;
-  font-family: "Source Sans Pro", Arial, sans-serif;
-  height: 100vh;
-  margin: 0;
+  font-family: 'Montserrat', sans-serif;
 }
 
-footer
-{
-  padding: 20px;
-  text-align: center;
-  border-top: 1px solid #ddd;
+.button {
+  background: none;
+  border: 1px solid #2329D6;
+  border-radius: 5px;
+  font-family: 'Montserrat', sans-serif;
+  color: #2329D6;
+  padding: 10px 20px;
+  transition: all .1s ease-in;
 }
 
-a, a:hover, a:focus, a:visited
-{
-  color: #000;
+.button.filled{
+  color: #fff;
+  background: #2329D6;
 }
 
-.logo {
-  width: 100%;
-  height: auto;
-  max-width: 400px;
-  max-height: 289px;
+.button:hover{
+  color: #fff;
+  background: #2329D6;
+  transform: scale(1.05);
+  transition: all .1s ease-in;
 }
