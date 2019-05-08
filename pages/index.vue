@@ -13,29 +13,11 @@
     <nuxt-link to="/login">
       <button class="button">Вход</button>
     </nuxt-link>
-<!--     <ul class="users">
-      <li v-for="(user, index) in users" :key="index" class="user">
-        <nuxt-link :to="{ name: 'id', params: { id: index }}">
-          {{ user.name }}
-        </nuxt-link>
-      </li>
-    </ul> -->
   </section>
 </template>
 
 <script>
-import axios from '~/plugins/axios'
-
 export default {
-  async asyncData () {
-    try {
-      let { data } = await axios.get('/api/height')
-      console.log(data);
-      return { users: data }
-    } catch (e) {
-      console.log(e);
-    }
-  },
   head () {
     return {
       title: 'Rostik: Следи за своим ростом удобно'

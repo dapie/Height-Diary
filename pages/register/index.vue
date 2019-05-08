@@ -8,22 +8,24 @@
     <p class="pagename">
       Регистрация
     </p>
-    <form name="contact" action="" method="post" id="register-form">
-      <label class="form-label" for="name">
+    <p v-if="errors" class="error">
+      {{errors}}
+    </p>
+    <form name="contact" action="" method="post" id="register-form" @submit="sendForm">
+      <label for="name">
         Имя
       </label>
-      <input class="form-field" name="name" id="name" placeholder="Наруто Узумаки" />
-      <label class="form-label" for="email">
+      <input name="name" id="name" placeholder="Наруто Узумаки" v-model="name" v-bind:class="{ red: nameHasError }"/>
+      <label for="email">
         Email
       </label>
-      <input class="form-field" name="email" id="email" placeholder="example@email.com" />
-      <label class="form-label" for="email" type="email">
-        Пароль
+      <input name="email" id="email" placeholder="example@email.com" v-model="email" v-bind:class="{ red: emailHasError }"/>
+      <label for="email" type="email">
+        Пароль (минимум 8 символов)
       </label>
-      <input class="form-field" name="password" id="password" type="password" placeholder="hardPassword"/>
+      <input name="password" id="password" type="password" placeholder="∙∙∙∙∙∙∙∙∙∙" v-model="password" v-bind:class="{ red: passwordHasError }"/>
       <button class="button" type="submit">Зарегистрироваться</button>
     </form>
-    </div>
   </section>
 </template>
 
@@ -31,18 +33,57 @@
 import axios from '~/plugins/axios'
 
 export default {
-  async asyncData () {
-    try {
-      let { data } = await axios.get('/api/height')
-      console.log(data);
-      return { users: data }
-    } catch (e) {
-      console.log(e);
+  data () {
+    return { 
+      name: null,
+      password: null,
+      email: null,
+      nameHasError: false,
+      emailHasError: false,
+      passwordHasError: false,
+      errors: null,
     }
+  },
+  async asyncData () {
   },
   head () {
     return {
       title: 'Rostik: Следи за своим ростом удобно'
+    }
+  },
+  methods: {
+    sendForm: async function (e) {
+      e.preventDefault();
+      this.nameHasError = false;
+      this.emailHasError = false;
+      this.passwordHasError = false;
+      this.errors = null;
+
+      var emailValid = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      var nameValid = /^[a-zA-Zа-яА-я ]+$/;
+
+      if (!this.name || !nameValid.test(this.name)) {
+        this.nameHasError = true;
+        this.errors
+      }
+      if (!emailValid.test(this.email)) {
+        this.emailHasError = true;
+      }
+      if (!this.password || this.password.length < 8) {
+        this.passwordHasError = true;
+      }
+      if(!this.nameHasError&& !this.emailHasError && !this.passwordHasError){
+        try {
+          let { data } = await axios.post('/api/register', {
+            name: this.name,
+            email: this.email,
+            password: this.password
+          })
+          data.error ? this.errors = data.error : null;
+        } catch (error) {
+          console.log(error);
+        }
+      }
     }
   }
 }
@@ -76,11 +117,23 @@ input {
 #register-form {
   margin: 0 auto;
   width: 300px;
+  display: block;
 }
 
 .button {
   float: right;
   margin-top: 5px;
+  display: inline-block;
+}
+
+.red {
+  border: 1px solid #ff0000;  
+}
+
+.error {
+  color: #ff0000;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 </style>
