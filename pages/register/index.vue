@@ -11,7 +11,7 @@
     <p v-if="errors" class="error">
       {{errors}}
     </p>
-    <form name="contact" action="" method="post" id="register-form" @submit="sendForm">
+    <form id="register-form" @submit="sendForm">
       <label for="name">
         Имя
       </label>
@@ -48,7 +48,7 @@ export default {
   },
   head () {
     return {
-      title: 'Rostik: Следи за своим ростом удобно'
+      title: 'Rostik: Регистрация'
     }
   },
   methods: {

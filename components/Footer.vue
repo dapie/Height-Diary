@@ -1,7 +1,7 @@
 <template>
   <footer>
   	<div class="text">
-    	Made with 💙 by <a href="https://vk.com/dapie">dapie</a>
+    	Made with 💙 by <a href="https://vk.com/dapie">Denis Tkachev</a>
     </div>
   </footer>
 </template>

@@ -14,8 +14,10 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "bcrypt": "^3.0.6",
     "cross-env": "^5.2.0",
     "express": "^4.16.4",
+    "express-session": "^1.16.1",
     "nuxt": "latest",
     "realm": "^2.26.1",
     "source-map-support": "^0.4.18"

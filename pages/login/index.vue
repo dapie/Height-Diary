@@ -8,15 +8,18 @@
     <p class="pagename">
       Вход в аккаунт
     </p>
-    <form name="contact" action="" method="post" id="register-form">
+    <p v-if="errors" class="error">
+      {{errors}}
+    </p>
+    <form id="login-form" @submit="sendForm">
       <label class="form-label" for="email">
         Email
       </label>
-      <input class="form-field" name="email" id="email" placeholder="example@email.com" />
+      <input class="form-field" name="email" id="email" placeholder="example@email.com" v-model="email" v-bind:class="{ red: emailEmpty }"/>
       <label class="form-label" for="email" type="email">
         Пароль
       </label>
-      <input class="form-field" name="password" id="password" type="password" placeholder="∙∙∙∙∙∙∙∙∙∙"/>
+      <input class="form-field" name="password" id="password" type="password" placeholder="∙∙∙∙∙∙∙∙∙∙" v-model="password" v-bind:class="{ red: passwordEmpty }"/>
       <button class="button" type="submit">Войти</button>
     </form>
     </div>
@@ -27,18 +30,45 @@
 import axios from '~/plugins/axios'
 
 export default {
-  async asyncData () {
-    try {
-      let { data } = await axios.get('/api/height')
-      console.log(data);
-      return { users: data }
-    } catch (e) {
-      console.log(e);
+  data () {
+    return { 
+      password: null,
+      email: null,
+      errors: null,
+      emailEmpty: false,
+      passwordEmpty: false
     }
   },
   head () {
     return {
-      title: 'Rostik: Следи за своим ростом удобно'
+      title: 'Rostik: Вход в аккаунт'
+    }
+  },
+  methods: {
+    sendForm: async function (e) {
+      e.preventDefault();
+      this.emailEmpty = false;
+      this.passwordEmpty = false;
+      this.errors = null;
+
+      if (!this.email) {
+        this.emailEmpty = true;
+      }
+      if (!this.password) {
+        this.passwordEmpty = true;
+      }
+
+      if(!this.emailEmpty && !this.passwordEmpty){
+        try {
+          let { data } = await axios.post('/api/login', {
+            email: this.email,
+            password: this.password
+          })
+          data.error ? this.errors = data.error : null;
+        } catch (error) {
+          console.log(error);
+        }
+      }
     }
   }
 }
@@ -69,7 +99,7 @@ input {
   margin: 8px 0;
 }
 
-#register-form {
+#login-form {
   margin: 0 auto;
   width: 300px;
 }
@@ -77,6 +107,16 @@ input {
 .button {
   float: right;
   margin-top: 5px;
+}
+
+.red {
+  border: 1px solid #ff0000;  
+}
+
+.error {
+  color: #ff0000;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 </style>
