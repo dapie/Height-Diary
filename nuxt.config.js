@@ -1,3 +1,5 @@
+import session from 'express-session'
+
 module.exports = {
   /*
   ** Headers of the page
@@ -39,6 +41,12 @@ module.exports = {
   },
   serverMiddleware: [
     // API middleware
+    session({
+      secret: 'rostik-project',
+      resave: false,
+      saveUninitialized: false,
+      cookie: { maxAge: 60000 }
+    }),
     '~/api/index.js'
   ]
 }

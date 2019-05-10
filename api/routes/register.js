@@ -5,17 +5,11 @@ const bcrypt = require('bcrypt');
 
 /* POST register */
 router.post('/register', async function (req, res, next) {
-  var response = {
-    error: null
-  }
-
   var database = await Realm.open(
     {path: 'heightschema.realm'},
   );
   if (database.objects('Users').filtered('email = "' +req.body.email + '"').length > 0){
-    response.error = "Email " + req.body.email + " занят.";
-    res.send(response)
-    return
+    return res.status(401).json({ message: 'Email '+req.body.email+' занят.' })
   }
   var timestamp = new Date();
   var id = parseInt(database.objects('Users').max('id'));
@@ -30,7 +24,7 @@ router.post('/register', async function (req, res, next) {
       password: hash
     });
   });
-  req.session.authUser = { email: req.body.email}
-  res.send(response)
+  req.session.authUser = { email: req.body.email, name: req.body.name }
+  return res.json({ email: req.body.email, name: req.body.name })
 })
 module.exports = router

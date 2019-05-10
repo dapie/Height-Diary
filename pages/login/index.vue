@@ -23,6 +23,9 @@
       <button class="button" type="submit">Войти</button>
     </form>
     </div>
+    <p v-if="$store.state.authUser">
+      LOGGINED
+    </p>
   </section>
 </template>
 
@@ -60,13 +63,12 @@ export default {
 
       if(!this.emailEmpty && !this.passwordEmpty){
         try {
-          let { data } = await axios.post('/api/login', {
+          await this.$store.dispatch('login', {
             email: this.email,
             password: this.password
           })
-          data.error ? this.errors = data.error : null;
         } catch (error) {
-          console.log(error);
+          this.errors = error.message
         }
       }
     }

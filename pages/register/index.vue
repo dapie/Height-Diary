@@ -63,25 +63,23 @@ export default {
       var nameValid = /^[a-zA-Zа-яА-я ]+$/;
 
       if (!this.name || !nameValid.test(this.name)) {
-        this.nameHasError = true;
-        this.errors
+        this.nameHasError = true
       }
       if (!emailValid.test(this.email)) {
-        this.emailHasError = true;
+        this.emailHasError = true
       }
       if (!this.password || this.password.length < 8) {
-        this.passwordHasError = true;
+        this.passwordHasError = true
       }
       if(!this.nameHasError&& !this.emailHasError && !this.passwordHasError){
         try {
-          let { data } = await axios.post('/api/register', {
+          await this.$store.dispatch('register', {
             name: this.name,
             email: this.email,
             password: this.password
           })
-          data.error ? this.errors = data.error : null;
         } catch (error) {
-          console.log(error);
+          this.errors = error.message
         }
       }
     }
