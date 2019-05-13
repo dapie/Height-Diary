@@ -13,7 +13,7 @@
     </div>
     <form id="height-form" @submit="addHeight">
       <label class="form-label" for="email">Добавить данные о росте:</label>
-      <input class="form-field" name="height" id="height" placeholder="170" v-model="height" v-bind:class="{ red: heightEmpty }"/>
+      <input class="form-field" name="height" id="height" v-model="height" v-bind:class="{ red: heightEmpty }"/>
       <label class="form-label" for="email">
         см 
       </label>
@@ -128,25 +128,28 @@ export default {
       var dataset = this.lineData.datasets[0].data;
       this.myHeight =  dataset[dataset.length-1];
       this.loaded = true
-      console.log(this.lineData.datasets[0].data)
+      this.toggleTimer(); 
     },
     addHeight: async function (e){
       e.preventDefault();
       try {
-          this.loaded = false;
-          await this.$store.dispatch('addHeight', {
-            height: this.height,
-          })
-          this.getData();
-          this.toggleTimer();
-        } catch (error) {
-          this.errors = error.message
+        this.heightEmpty = false;
+        if(!this.height){
+          this.heightEmpty = true;
+          return
         }
+        this.loaded = false;
+        await this.$store.dispatch('addHeight', {
+          height: this.height,
+        })
+        this.getData();
+      } catch (error) {
+        this.errors = error.message
+      }
     }
   },
   mounted(){
-    this.toggleTimer();
-    this.getData();  
+    this.getData(); 
   },
   middleware: 'authenticated'
 }
@@ -226,6 +229,10 @@ export default {
 
 #height-form .button{
   margin-left: 10px;
+}
+
+.red{
+  border: 1px solid #ff0000;
 }
 
 </style>

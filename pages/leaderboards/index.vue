@@ -8,6 +8,9 @@
         <p class="desc">Средний рост пользователей сервиса</p>
       </div>
     </div>
+    <div class="info">
+      <h1 class="name">Топ-10</h1>
+    </div>
   </section>
 </template>
 
@@ -70,6 +73,24 @@ export default {
   padding: 20px 30px;
   margin: 0 auto;
 }
+
+.info{
+  margin: 30px 0;
+}
+
+.info img{
+  display: inline-block;
+  width: 50px;
+}
+
+.info .name{
+  display: inline-block;
+  line-height: 50px;
+  color: #2329D6;
+  font-size: 24px;
+  vertical-align: middle;
+}
+
 .average{
   margin: 30px auto;
   text-align: center;
