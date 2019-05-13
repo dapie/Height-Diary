@@ -13,7 +13,7 @@ router.post('/register', async function (req, res, next) {
   }
   var timestamp = new Date();
   var id = parseInt(database.objects('Users').max('id'));
-  id = id ? ++id: 0;
+  id = id != undefined ? id: 0;
   let hash = bcrypt.hashSync(req.body.password, 10);
   database.write(() => {
     database.create('Users', {

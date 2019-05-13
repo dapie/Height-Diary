@@ -9,12 +9,6 @@
 <style>
 footer{
   text-align: center;
-  font-family: 'Montserrat';
   width: 100%;
-}
-
-footer a{
-	text-decoration: none;
-	color: #2329D6;
 }
 </style>

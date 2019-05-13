@@ -16,7 +16,6 @@ export const actions = {
   // nuxtServerInit is called by Nuxt.js before server-rendering every page
   nuxtServerInit({ commit }, { req }) {
     if (req.session && req.session.authUser) {
-      console.log("I AM HERE")
       commit('SET_USER', req.session.authUser)
     }
   },
@@ -38,7 +37,7 @@ export const actions = {
       commit('SET_USER', data)
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        throw new Error('Ошибка при создании')
+        throw new Error(error.response.data.message)
       }
       throw error
     }
