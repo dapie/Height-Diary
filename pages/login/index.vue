@@ -1,5 +1,5 @@
 <template>
-  <section class="container">
+  <section class="container" v-if="!$store.state.authUser">
     <nuxt-link to='/'>
       <div class="logo">
         <h1 class="title">Rostik</h1><img src="~assets/img/logo.svg" alt="">
@@ -23,9 +23,6 @@
       <button class="button" type="submit">Войти</button>
     </form>
     </div>
-    <p v-if="$store.state.authUser">
-      LOGGINED
-    </p>
   </section>
 </template>
 
@@ -67,10 +64,16 @@ export default {
             email: this.email,
             password: this.password
           })
+          this.$router.replace({ path: '/diary'})
         } catch (error) {
           this.errors = error.message
         }
       }
+    }
+  },
+  beforeMount(){
+    if(this.$store.state.authUser){
+      this.$router.replace({ path: '/diary'})
     }
   }
 }

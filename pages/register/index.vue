@@ -1,5 +1,5 @@
 <template>
-  <section class="container">
+  <section class="container" v-if="!$store.state.authUser">
     <nuxt-link to='/'>
       <div class="logo">
         <h1 class="title">Rostik</h1><img src="~assets/img/logo.svg" alt="">
@@ -82,6 +82,11 @@ export default {
           this.errors = error.message
         }
       }
+    }
+  },
+  beforeMount(){
+    if(this.$store.state.authUser){
+      this.$router.replace({ path: '/diary'})
     }
   }
 }

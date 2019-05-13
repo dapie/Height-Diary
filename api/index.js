@@ -9,10 +9,12 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 // Require API routes
 const register = require('./routes/register')
 const login = require('./routes/login')
+const logout = require('./routes/logout')
 
 // Import API Routes
 app.use(register)
 app.use(login)
+app.use(logout)
 
 // Export the server middleware
 module.exports = {

@@ -15,9 +15,9 @@
     		</nuxt-link>
     	</li>
     	<li>
-    		<nuxt-link to='/'>
+    		<a href="#" @click="logout">
     			Выход
-    		</nuxt-link>
+    		</a>
     	</li>
     </ul>
   </header>
@@ -25,7 +25,17 @@
 
 <script>
 export default {
-    props: ['active']
+    props: ['active'],
+    methods: {
+	    async logout() {
+	      try {
+	        await this.$store.dispatch('logout')
+	        this.$router.replace({ path: '/login'})
+	      } catch (e) {
+	        console.log(e.message)
+	      }
+	    }
+	}
 }
 </script>
 
@@ -34,13 +44,13 @@ header{
   width: 100%;
   height: 50px;
 }
-.title{
+header .title{
 	font-size: 32px;
 	color: #2329D6;
 	display: inline-block;
 	line-height: 50px;
 }
-.logo{
+header .logo{
 	display: inline-block;
 }
 .nav{
