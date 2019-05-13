@@ -8,9 +8,6 @@
         <p class="desc">Средний рост пользователей сервиса</p>
       </div>
     </div>
-    <p v-if="$store.state.authUser">
-      LOGGINED
-    </p>
   </section>
 </template>
 
@@ -61,7 +58,8 @@ export default {
         }
       }
     }
-  }
+  },
+  middleware: 'authenticated'
 }
 </script>
 
