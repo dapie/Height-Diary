@@ -74,4 +74,30 @@ header .logo{
 	transition: all .3s ease-in;
 }
 
+@media screen and (max-width: 680px) {
+	header .title{
+		display: block;
+		text-align: center;
+	}
+
+	header .logo{
+		width: 100%;
+	}
+	.nav{
+		display: block;
+		float: left;
+		width: 100%;
+	}
+
+	.nav li{
+		width: 32%;
+		padding: 0;
+		text-align: center;
+	}
+
+	header{
+		padding: 20px 0px;
+	}
+}
+
 </style>

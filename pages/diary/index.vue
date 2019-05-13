@@ -12,9 +12,9 @@
       </div>
     </div>
     <form id="height-form" @submit="addHeight">
-      <label class="form-label" for="email">Добавить данные о росте:</label>
+      <label class="form-label" for="height" id="addHeight">Добавить данные о росте:</label>
       <input class="form-field" name="height" id="height" v-model="height" v-bind:class="{ red: heightEmpty }"/>
-      <label class="form-label" for="email">
+      <label class="form-label" for="height">
         см 
       </label>
       <button class="button" type="submit">Добавить</button>
@@ -157,9 +157,7 @@ export default {
 
 <style scoped>
 .diary{
-  width: 100%;
   max-width: 1200px;
-  min-width: 500px;
   padding: 20px 30px;
   margin: 0 auto;
 }
@@ -191,9 +189,8 @@ export default {
 
 .chart{
     width: 100%;
-    height: 300px;
     position: relative;
-    margin-top: 30px;
+    padding: 30px 0;
     display:inline-block;
 }
 
@@ -233,6 +230,56 @@ export default {
 
 .red{
   border: 1px solid #ff0000;
+}
+
+@media screen and (max-width: 680px) {
+  .average{
+    padding: 0;
+    margin: 0;
+    text-align: center;
+  }
+
+  .profile-info{
+    padding: 10px 0;
+    margin: 0;
+    text-align: center;
+  }
+
+  .profile-info .name{
+    font-size: 20px;
+  }
+
+  .profile-info img {
+    vertical-align: middle;
+    width: 32px;
+  }
+
+  #height-form{
+    text-align: center;
+  }
+  
+  #addHeight {
+    display: block;
+    margin: 10px 0;
+  }
+
+  #height {
+    margin: 0px 10px 0px 0px;
+  }
+  
+  #height-form .button{
+    margin: 0px 20px;
+  }
+
+  .desc{
+    text-align: center;
+  }
+
+  .diary{
+    padding: 20px 5px;
+  }
+
+
 }
 
 </style>
