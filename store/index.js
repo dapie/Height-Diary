@@ -3,12 +3,16 @@ import axios from 'axios'
 export const state = () => {
   return {
     authUser: null,
+    heights: null,
   }
 }
 
 export const mutations = {
   SET_USER: function (state, user) {
     state.authUser = user
+  },
+  SET_HEIGHTS: function (state, heights) {
+    state.heights = heights
   }
 }
 
@@ -26,6 +30,30 @@ export const actions = {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         throw new Error('Не верен Email или пароль')
+      }
+      throw error
+    }
+  },
+
+  async height({ commit }) {
+    try {
+      const { data } = await axios.get('/api/height')
+      commit('SET_HEIGHTS', data)
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        throw new Error('Ошибка')
+      }
+      throw error
+    }
+  },
+
+  async addHeight({ commit }, {height}) {
+    try {
+      const { data } = await axios.post('/api/height', {height})
+      commit('SET_HEIGHTS', data)
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        throw new Error('Ошибка')
       }
       throw error
     }

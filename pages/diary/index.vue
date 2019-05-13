@@ -3,7 +3,7 @@
     <Header active="1"></Header>
     <div class="profile-info">
       <img src="~/assets/img/person.png">
-      <h1 class="name">Denis Tkachev</h1>
+      <h1 class="name">{{this.$store.state.authUser.name}}</h1>
     </div>
     <div class="average">
       <div class="text">
@@ -11,7 +11,7 @@
         <p class="desc">Ваш текущий рост</p>
       </div>
     </div>
-    <form id="height-form" @submit="">
+    <form id="height-form" @submit="addHeight">
       <label class="form-label" for="email">Добавить данные о росте:</label>
       <input class="form-field" name="height" id="height" placeholder="170" v-model="height" v-bind:class="{ red: heightEmpty }"/>
       <label class="form-label" for="email">
@@ -20,7 +20,7 @@
       <button class="button" type="submit">Добавить</button>
     </form>
     <div class="chart">
-      <line-chart :chartData="lineData" :options="options"></line-chart>
+      <line-chart :chartData="lineData" :options="options" v-if="loaded"></line-chart>
     </div>
   </section>
 </template>
@@ -40,21 +40,24 @@ export default {
       title: 'Rostik: Дневник'
     }
   },
-  asyncData () {
-    const lineData = {
-        labels: ['11.04.2017', '12.04.2017', '13.04.2017', '14.04.2017', '15.04.2017', '16.04.2017'],
+  data() {
+    return {
+      loaded: false,
+      heights: null,
+      curHeight: 0,
+      isRunning: false,
+      interval: null,
+      heightEmpty: false,
+      height: null,
+      myHeight: 178,
+      lineData: {
+        labels: [],
         datasets: [{
-            label: '',
-            data: [178, 179, 179, 180, 181, 181],
+            data: [],
             backgroundColor: [
                 'rgba(35, 41, 214, 0.2)',
             ],
             borderColor: [
-                'rgba(35, 41, 214, 1)',
-                'rgba(35, 41, 214, 1)',
-                'rgba(35, 41, 214, 1)',
-                'rgba(35, 41, 214, 1)',
-                'rgba(35, 41, 214, 1)',
                 'rgba(35, 41, 214, 1)',
             ],
             pointBorderColor: [
@@ -62,8 +65,8 @@ export default {
             ],
             borderWidth: 1
         }]
-    } // some data
-    const options = {
+    },
+      options: {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
@@ -91,23 +94,15 @@ export default {
           display: false
         },
     }
-    return { lineData, options }
-  },
-  data() {
-    return {
-      curHeight: 0,
-      isRunning: false,
-      interval: null,
-      heightEmpty: false,
-      height: null,
-      myHeight: 178
     }
   },
+
   methods: {
     toggleTimer() {
       if (this.isRunning) {
         clearInterval(this.interval);
       } else {
+        this.curHeight = 0;
         this.interval = setInterval(this.incrementTime, 0);
       }
       this.isRunning = !this.isRunning
@@ -119,9 +114,39 @@ export default {
         this.toggleTimer();
       }
     },
+    async getData() {
+      var date
+      await this.$store.dispatch('height')
+      var heights = JSON.parse(JSON.stringify(this.$store.state.heights))
+      this.lineData.labels = [];
+      this.lineData.datasets[0].data = [];
+      for(var el in heights){
+        date = new Date(heights[el].timestamp)
+        this.lineData.labels.push(('0' + date.getDate()).slice(-2)+'.'+('0' + date.getMonth()).slice(-2)+'.'+date.getFullYear())
+        this.lineData.datasets[0].data.push(heights[el].height)
+      }
+      var dataset = this.lineData.datasets[0].data;
+      this.myHeight =  dataset[dataset.length-1];
+      this.loaded = true
+      console.log(this.lineData.datasets[0].data)
+    },
+    addHeight: async function (e){
+      e.preventDefault();
+      try {
+          this.loaded = false;
+          await this.$store.dispatch('addHeight', {
+            height: this.height,
+          })
+          this.getData();
+          this.toggleTimer();
+        } catch (error) {
+          this.errors = error.message
+        }
+    }
   },
   mounted(){
     this.toggleTimer();
+    this.getData();  
   },
   middleware: 'authenticated'
 }
