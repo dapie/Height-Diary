@@ -12,8 +12,7 @@ router.post('/register', async function (req, res, next) {
     return res.status(401).json({ message: 'Email '+req.body.email+' занят.' })
   }
   var timestamp = new Date();
-  var id = parseInt(database.objects('Users').max('id'));
-  id = id != undefined ? id: 0;
+  var id = database.objects('Users').length;
   let hash = bcrypt.hashSync(req.body.password, 10);
   database.write(() => {
     database.create('Users', {

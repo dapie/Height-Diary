@@ -19,6 +19,11 @@
       </label>
       <button class="button" type="submit">Добавить</button>
     </form>
+    <p class="chartTitle">История изменения роста:</p>
+    <select name="" id="" class="selectAmount">
+      <option value="1">Последние</option>
+      <option value="2">Все</option>
+    </select>
     <div class="chart">
       <line-chart :chartData="lineData" :options="options" v-if="loaded"></line-chart>
     </div>
@@ -126,7 +131,7 @@ export default {
         this.lineData.datasets[0].data.push(heights[el].height)
       }
       var dataset = this.lineData.datasets[0].data;
-      this.myHeight =  dataset[dataset.length-1];
+      this.myHeight =  dataset[dataset.length-1] ? dataset[dataset.length-1]: 0;
       this.loaded = true
       this.toggleTimer(); 
     },
@@ -184,6 +189,16 @@ export default {
 
 .number span{
   font-size: 48px;
+  margin-left: 10px;
+}
+
+.chartTitle{
+  color: #2329D6;
+  font-size: 18px;
+  display: inline-block;
+}
+
+.selectAmount{
   margin-left: 10px;
 }
 
@@ -279,6 +294,16 @@ export default {
     padding: 20px 5px;
   }
 
+  .chartTitle{
+    color: #2329D6;
+    text-align: center;
+    display: block;
+  }
+
+  .selectAmount{
+    display: block;
+    margin: 0 auto;
+  }
 
 }
 

@@ -45,7 +45,7 @@ module.exports = {
       secret: 'rostik-project',
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: 60000 }
+      cookie: { maxAge: Date.now() + (30 * 86400 * 1000) }
     }),
     '~/api/index.js'
   ]

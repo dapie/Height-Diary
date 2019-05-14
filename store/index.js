@@ -4,6 +4,7 @@ export const state = () => {
   return {
     authUser: null,
     heights: null,
+    leaderboards: null
   }
 }
 
@@ -13,6 +14,9 @@ export const mutations = {
   },
   SET_HEIGHTS: function (state, heights) {
     state.heights = heights
+  },
+  SET_LEADERBOARDS: function (state, leaderboards) {
+    state.leaderboards = leaderboards
   }
 }
 
@@ -51,6 +55,18 @@ export const actions = {
     try {
       const { data } = await axios.post('/api/height', {height})
       commit('SET_HEIGHTS', data)
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        throw new Error('Ошибка')
+      }
+      throw error
+    }
+  },
+
+  async leaderboards({ commit }) {
+    try {
+      const { data } = await axios.get('/api/leaderboards')
+      commit('SET_LEADERBOARDS', data)
     } catch (error) {
       if (error.response && error.response.status === 401) {
         throw new Error('Ошибка')

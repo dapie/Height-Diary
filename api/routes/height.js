@@ -9,8 +9,7 @@ router.get('/height', async function (req, res, next) {
       {path: 'heightschema.realm'},
     );
     let user = database.objects('Users').filtered('email = "' +req.session.authUser.email + '"')[0];
-    let array = database.objects('Height').filtered('user_id = "' + user.id + '"');
-    //console.log(database.objects('Height').avg('height'))
+    let array = database.objects('Height').filtered('user_id = "' + user.id + '"').slice(-10);
     res.json(array)
   } else {
     res.status(401).json({ message: 'Ошибка' })

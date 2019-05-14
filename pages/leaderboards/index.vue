@@ -1,15 +1,29 @@
 <template>
   <section class="leaderboard">
     <Header active="2"></Header>
-    <div class="average">
+    <div class="average" v-if="average">
       <img class="icon" src="~/assets/img/line-chart.png"/>
       <div class="text">
-        <h1 class="number">178<span>см</span></h1>
+        <h1 class="number">{{curAverage}}<span>см</span></h1>
         <p class="desc">Средний рост пользователей сервиса</p>
       </div>
     </div>
     <div class="info">
       <h1 class="name">Топ-10</h1>
+      <table class="top">
+        <tr v-for="(item, index) in top">
+          <td class="number">#{{parseInt(index)+1}}</td>
+          <td class="username">{{item.name}}</td>
+          <td class="userheight">{{item.height}}</td>
+        </tr>
+      </table>
+      <table class="top your" v-if="yourResult">
+        <tr>
+          <td class="number">#{{yourResult.number}}</td>
+          <td class="username">{{yourResult.name}}</td>
+          <td class="userheight">{{yourResult.height}}</td>
+        </tr>
+      </table>
     </div>
   </section>
 </template>
@@ -21,11 +35,10 @@ import Header from '~/components/Header.vue'
 export default {
   data () {
     return { 
-      password: null,
-      email: null,
-      errors: null,
-      emailEmpty: false,
-      passwordEmpty: false
+      curAverage: 0.0,
+      average: null,
+      top: null,
+      yourResult: null
     }
   },
   components: {
@@ -33,34 +46,38 @@ export default {
   },
   head () {
     return {
-      title: 'Rostik: топ-10'
+      title: 'Rostik: Топ-10'
     }
   },
   methods: {
-    sendForm: async function (e) {
-      e.preventDefault();
-      this.emailEmpty = false;
-      this.passwordEmpty = false;
-      this.errors = null;
-
-      if (!this.email) {
-        this.emailEmpty = true;
+    toggleTimer() {
+      if (this.isRunning) {
+        clearInterval(this.interval);
+      } else {
+        this.curAverage = 0;
+        this.interval = setInterval(this.incrementTime, 0);
       }
-      if (!this.password) {
-        this.passwordEmpty = true;
+      this.isRunning = !this.isRunning
+    },
+    incrementTime() {
+      this.curAverage = parseFloat(this.curAverage) + 1.1;
+      if(this.curAverage >= this.average){
+        this.curAverage = this.average;
+        this.toggleTimer();
       }
-
-      if(!this.emailEmpty && !this.passwordEmpty){
-        try {
-          await this.$store.dispatch('login', {
-            email: this.email,
-            password: this.password
-          })
-        } catch (error) {
-          this.errors = error.message
-        }
-      }
-    }
+      this.curAverage = this.curAverage.toFixed(1)
+    },
+    async getData() {
+      await this.$store.dispatch('leaderboards')
+      var leaderboards = JSON.parse(JSON.stringify(this.$store.state.leaderboards))
+      this.average = leaderboards.average    
+      this.top = leaderboards.top  
+      this.yourResult = leaderboards.your
+      this.toggleTimer(); 
+    },
+  },
+  mounted() {
+    this.getData();
   },
   middleware: 'authenticated'
 }
@@ -69,7 +86,6 @@ export default {
 <style scoped>
 .leaderboard{
   max-width: 1200px;
-  min-width: 520px;
   padding: 20px 30px;
   margin: 0 auto;
 }
@@ -84,7 +100,7 @@ export default {
 }
 
 .info .name{
-  display: inline-block;
+  text-align: center;
   line-height: 50px;
   color: #2329D6;
   font-size: 24px;
@@ -108,13 +124,68 @@ export default {
   vertical-align: middle;
 }
 
-.number{
+.average .number{
   font-size: 72px;
   font-weight: bold;
 }
 
-.number span{
+.average .number span{
   font-size: 48px;
   margin-left: 10px;
+}
+
+.top {
+  width: 500px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
+  color: #2329D6;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 auto;
+}
+
+.top .userheight{
+  text-align: center;
+}
+
+.top th, .top td {
+  padding: 15px;
+  text-align: left;
+}
+
+.top tr {
+  border-top: 1px solid #EBEFF2;
+}
+
+.top tr:first-child {
+  border-top: none;
+}
+
+.top.your{
+  margin-top: 10px;
+}
+
+.height-image{
+  display: inline-block;
+}
+
+@media screen and (max-width: 680px) {
+  .average .text{
+    text-align: center;
+  }
+
+  .average .icon{
+    width: 100px;
+  }
+
+  .leaderboards{
+    padding: 20px 5px;
+  }
+
+  .top{
+    width: 100%;
+    font-size: 14px;
+  }
 }
 </style>

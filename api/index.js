@@ -11,12 +11,14 @@ const register = require('./routes/register')
 const login = require('./routes/login')
 const logout = require('./routes/logout')
 const height = require('./routes/height')
+const leaderboards = require('./routes/leaderboards')
 
 // Import API Routes
 app.use(height)
 app.use(register)
 app.use(login)
 app.use(logout)
+app.use(leaderboards)
 
 // Export the server middleware
 module.exports = {

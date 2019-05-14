@@ -78,6 +78,7 @@ export default {
             email: this.email,
             password: this.password
           })
+          this.$router.replace({ path: '/diary'})
         } catch (error) {
           this.errors = error.message
         }
