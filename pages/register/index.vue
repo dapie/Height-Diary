@@ -60,7 +60,7 @@ export default {
       this.errors = null;
 
       var emailValid = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-      var nameValid = /^[a-zA-Zа-яА-я ]+$/;
+      var nameValid = /^[a-zA-Zа-яА-ЯёЁ ]+$/;
 
       if (!this.name || !nameValid.test(this.name)) {
         this.nameHasError = true

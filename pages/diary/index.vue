@@ -20,9 +20,9 @@
       <button class="button" type="submit">Добавить</button>
     </form>
     <p class="chartTitle">История изменения роста:</p>
-    <select name="" id="" class="selectAmount">
-      <option value="1">Последние</option>
-      <option value="2">Все</option>
+    <select name="" id="" class="selectAmount" v-model="selected">
+      <option>Последние</option>
+      <option>Все</option>
     </select>
     <div class="chart">
       <line-chart :chartData="lineData" :options="options" v-if="loaded"></line-chart>
@@ -55,6 +55,7 @@ export default {
       heightEmpty: false,
       height: null,
       myHeight: 178,
+      selected: 'Последние',
       lineData: {
         labels: [],
         datasets: [{
@@ -122,7 +123,8 @@ export default {
     async getData() {
       var date
       await this.$store.dispatch('height')
-      var heights = JSON.parse(JSON.stringify(this.$store.state.heights))
+      var heights = Object.values(JSON.parse(JSON.stringify(this.$store.state.heights)))
+      heights = this.selected == 'Все' ? heights : heights.slice(-10);
       this.lineData.labels = [];
       this.lineData.datasets[0].data = [];
       for(var el in heights){
@@ -152,6 +154,12 @@ export default {
         this.errors = error.message
       }
     }
+  },
+  watch: {
+    selected: function (val) {
+      this.loaded = false
+      this.getData()
+    },
   },
   mounted(){
     this.getData(); 

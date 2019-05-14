@@ -64,6 +64,7 @@ export default {
       if(this.curAverage >= this.average){
         this.curAverage = this.average;
         this.toggleTimer();
+        return
       }
       this.curAverage = this.curAverage.toFixed(1)
     },
@@ -179,7 +180,7 @@ export default {
     width: 100px;
   }
 
-  .leaderboards{
+  .leaderboard{
     padding: 20px 5px;
   }
 
