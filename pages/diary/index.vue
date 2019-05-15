@@ -14,9 +14,7 @@
     <form id="height-form" @submit="addHeight">
       <label class="form-label" for="height" id="addHeight">Добавить данные о росте:</label>
       <input class="form-field" name="height" id="height" v-model="height" v-bind:class="{ red: heightEmpty }"/>
-      <label class="form-label" for="height">
-        см 
-      </label>
+      <label class="form-label" for="height">см</label>
       <button class="button" type="submit">Добавить</button>
     </form>
     <p class="chartTitle">История изменения роста:</p>

@@ -5,20 +5,12 @@
         <h1 class="title">Rostik</h1><img src="~assets/img/logo.svg" alt="">
       </div>
     </nuxt-link>
-    <p class="pagename">
-      Вход в аккаунт
-    </p>
-    <p v-if="errors" class="error">
-      {{errors}}
-    </p>
+    <p class="pagename">Вход в аккаунт</p>
+    <p v-if="errors" class="error">{{errors}}</p>
     <form id="login-form" @submit="sendForm">
-      <label class="form-label" for="email">
-        Email
-      </label>
+      <label class="form-label" for="email">Email</label>
       <input class="form-field" name="email" id="email" placeholder="example@email.com" v-model="email" v-bind:class="{ red: emailEmpty }"/>
-      <label class="form-label" for="email" type="email">
-        Пароль
-      </label>
+      <label class="form-label" for="email" type="email">Пароль</label>
       <input class="form-field" name="password" id="password" type="password" placeholder="∙∙∙∙∙∙∙∙∙∙" v-model="password" v-bind:class="{ red: passwordEmpty }"/>
       <button class="button" type="submit">Войти</button>
     </form>

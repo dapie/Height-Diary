@@ -57,7 +57,7 @@ export const actions = {
       commit('SET_HEIGHTS', data)
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        throw new Error('Ошибка')
+        throw new Error(error.response.data.message)
       }
       throw error
     }
@@ -69,7 +69,7 @@ export const actions = {
       commit('SET_LEADERBOARDS', data)
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        throw new Error('Ошибка')
+        throw new Error(error.response.data.message)
       }
       throw error
     }

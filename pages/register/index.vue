@@ -12,17 +12,11 @@
       {{errors}}
     </p>
     <form id="register-form" @submit="sendForm">
-      <label for="name">
-        Имя
-      </label>
-      <input name="name" id="name" placeholder="Наруто Узумаки" v-model="name" v-bind:class="{ red: nameHasError }"/>
-      <label for="email">
-        Email
-      </label>
+      <label for="name">Имя</label>
+      <input name="name" id="name" placeholder="Иван Иванов" v-model="name" v-bind:class="{ red: nameHasError }"/>
+      <label for="email">Email</label>
       <input name="email" id="email" placeholder="example@email.com" v-model="email" v-bind:class="{ red: emailHasError }"/>
-      <label for="email" type="email">
-        Пароль (минимум 8 символов)
-      </label>
+      <label for="email" type="email">Пароль (минимум 8 символов)</label>
       <input name="password" id="password" type="password" placeholder="∙∙∙∙∙∙∙∙∙∙" v-model="password" v-bind:class="{ red: passwordHasError }"/>
       <button class="button" type="submit">Зарегистрироваться</button>
     </form>
@@ -43,8 +37,6 @@ export default {
       passwordHasError: false,
       errors: null,
     }
-  },
-  async asyncData () {
   },
   head () {
     return {

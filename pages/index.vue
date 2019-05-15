@@ -2,7 +2,7 @@
   <section class="container">
     <div class="logo">
       <h1 class="title">Rostik</h1>
-      <img src="~assets/img/logo.svg" alt="">
+      <img src="~assets/img/logo.svg">
     </div>
     <p class="desc">
       Следи за своим ростом удобно
@@ -27,7 +27,7 @@ export default {
 </script>
 
 <style scoped>
-.title {
+.logo .title {
   color: #2329D6;
   font-size: 120px;
   display: inline-block;
@@ -59,7 +59,7 @@ export default {
     margin: 0 auto;
   }
 
-  .title {
+  .logo .title {
     font-size: 72px;
     display: block;
   }
