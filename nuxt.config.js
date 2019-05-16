@@ -48,5 +48,9 @@ module.exports = {
       cookie: { maxAge: Date.now() + (30 * 86400 * 1000) }
     }),
     '~/api/index.js'
-  ]
+  ],
+  server: {
+    port: process.env.PORT || 3000,
+    host: process.env.HOST || 'localhost'
+  }
 }
