@@ -49,8 +49,4 @@ module.exports = {
     }),
     '~/api/index.js'
   ],
-  server: {
-    port: process.env.PORT || 3000,
-    host: process.env.HOST || 'localhost'
-  }
 }
