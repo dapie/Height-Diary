@@ -139,7 +139,7 @@ export default {
       e.preventDefault();
       try {
         this.heightEmpty = false;
-        if(!this.height){
+        if(!this.height || this.height < 0){
           this.heightEmpty = true;
           return
         }
