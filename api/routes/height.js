@@ -36,4 +36,21 @@ router.post('/height', async function (req, res, next) {
     res.status(401).json({ message: 'Ошибка' })
   }
 })
+
+router.post('/height/deleteLast', async function (req, res, next) {
+  if(req.session.authUser){
+    var database = await Realm.open(
+      {path: 'heightschema.realm'},
+    );
+    let user = database.objects('Users').filtered('email = "' +req.session.authUser.email + '"')[0];
+    database.write(() => {
+      let last = database.objects('Height').filtered('user_id = "' + user.id + '"').sorted('timestamp', true)[0];
+      if(last) database.delete(last);
+    })
+    let array = database.objects('Height').filtered('user_id = "' + user.id + '"');
+    res.json(array)
+  } else {
+    res.status(401).json({ message: 'Ошибка' })
+  }
+})
 module.exports = router

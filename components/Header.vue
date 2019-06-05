@@ -5,11 +5,16 @@
     </div>
     <ul class="nav">
     	<li v-bind:class="{active: active == 1}">
+    		<nuxt-link to='/admin'>
+    			Панель администратора
+    		</nuxt-link>
+    	</li>
+    	<li v-bind:class="{active: active == 2}">
     		<nuxt-link to='/diary'>
     			Дневник
     		</nuxt-link>
     	</li>
-    	<li v-bind:class="{active: active == 2}">
+    	<li v-bind:class="{active: active == 3}">
     		<nuxt-link to='/leaderboards'>
     			Топ-10
     		</nuxt-link>

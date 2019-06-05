@@ -1,30 +1,9 @@
 <template>
-  <section class="diary">
-    <Header active="2"></Header>
+  <section class="admin">
+    <Header active="1"></Header>
     <div class="profile-info">
       <img src="~/assets/img/person.png">
       <h1 class="name">{{this.$store.state.authUser.name}}</h1>
-    </div>
-    <div class="average">
-      <div class="text">
-        <h1 class="number">{{curHeight}}<span>см</span></h1>
-        <p class="desc">Ваш текущий рост</p>
-      </div>
-    </div>
-    <form id="height-form" @submit="addHeight">
-      <label class="form-label" for="height" id="addHeight">Добавить данные о росте:</label>
-      <input class="form-field" name="height" id="height" v-model="height" v-bind:class="{ red: heightEmpty }"/>
-      <label class="form-label" for="height">см</label>
-      <button class="button" type="submit">Добавить</button>
-      <button class="button delete" @click="deleteLast" v-if="curHeight">Удалить последнюю запись</button>
-    </form>
-    <p class="chartTitle">История изменения роста:</p>
-    <select name="" id="" class="selectAmount" v-model="selected">
-      <option>Последние</option>
-      <option>Все</option>
-    </select>
-    <div class="chart">
-      <line-chart :chartData="lineData" :options="options" v-if="loaded"></line-chart>
     </div>
   </section>
 </template>
@@ -121,7 +100,6 @@ export default {
     },
     async getData() {
       var date
-      if(this.isRunning) this.toggleTimer()
       await this.$store.dispatch('height')
       var heights = Object.values(JSON.parse(JSON.stringify(this.$store.state.heights)))
       heights = this.selected == 'Все' ? heights : heights.slice(-10);
@@ -153,16 +131,6 @@ export default {
       } catch (error) {
         this.errors = error.message
       }
-    },
-    deleteLast: async function (e){
-      e.preventDefault();
-      try {
-        this.loaded = false;
-        await this.$store.dispatch('deleteLast')
-        this.getData();
-      } catch (error) {
-        this.errors = error.message
-      }
     }
   },
   watch: {
@@ -179,7 +147,7 @@ export default {
 </script>
 
 <style scoped>
-.diary{
+.admin{
   max-width: 1200px;
   padding: 20px 30px;
   margin: 0 auto;
@@ -189,17 +157,6 @@ export default {
 }
 .average .icon, .text{
   display: inline-block;
-}
-
-.button.delete{
-  border: 1px solid #FF5252;
-  color: #FF5252;
-}
-
-.button.delete:hover{
-  border: 1px solid #FF5252;
-  background: #FF5252;
-  color: #fff;
 }
 
 .icon {

@@ -63,6 +63,18 @@ export const actions = {
     }
   },
 
+  async deleteLast({ commit }) {
+    try {
+      const { data } = await axios.post('/api/height/deleteLast')
+      commit('SET_HEIGHTS', data)
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        throw new Error(error.response.data.message)
+      }
+      throw error
+    }
+  },
+
   async leaderboards({ commit }) {
     try {
       const { data } = await axios.get('/api/leaderboards')
