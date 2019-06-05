@@ -1,4 +1,5 @@
-# heightdiary
+# Height Diary
+## Nuxt.js/Express.js based app
 
 > Diary of users height
 
