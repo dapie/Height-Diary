@@ -1,6 +1,6 @@
 <template>
   <section class="leaderboard">
-    <Header active="2"></Header>
+    <Header active="3"></Header>
     <div class="average" v-if="average">
       <img class="icon" src="~/assets/img/line-chart.png"/>
       <div class="text">

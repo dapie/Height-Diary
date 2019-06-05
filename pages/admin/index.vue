@@ -142,7 +142,7 @@ export default {
   mounted(){
     this.getData(); 
   },
-  middleware: 'authenticated'
+  middleware: 'administrator'
 }
 </script>
 

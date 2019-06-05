@@ -4,7 +4,7 @@
         <h1 class="title">Rostik</h1>
     </div>
     <ul class="nav">
-    	<li v-bind:class="{active: active == 1}">
+    	<li v-bind:class="{active: active == 1}" v-if="this.$store.state.authUser.isAdmin">
     		<nuxt-link to='/admin'>
     			Панель администратора
     		</nuxt-link>

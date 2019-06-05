@@ -12,8 +12,8 @@ router.post('/login', async function (req, res, next) {
   if(user){
     bcrypt.compare(req.body.password, user.password, function(err, result) {
       if(result) {
-        req.session.authUser = { email: req.body.email, name: user.name }
-        return res.json({ email: req.body.email, name: user.name })
+        req.session.authUser = { email: req.body.email, name: user.name, isAdmin: user.isAdmin }
+        return res.json({ email: req.body.email, name: user.name, isAdmin: user.isAdmin  })
       } else {
         res.status(401).json({ message: 'Не верен Email или пароль' })
       } 
