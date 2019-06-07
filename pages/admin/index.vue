@@ -1,6 +1,15 @@
 <template>
   <section class="admin">
     <Header active="1"></Header>
+    <transition name="fade">
+      <div class="modal" v-if="showModal">
+        <div class="modal-content">
+          <p class="text"> Удалить аккаунт? </p>
+          <button class="button delete" @click="deleteAccount">Удалить</button>
+          <button class="button cancel" @click="toggleModal">Отмена</button>
+        </div>
+      </div>
+   </transition>
     <div class="grid">
       <div class="column">
         <div class="profile-info">
@@ -21,11 +30,9 @@
           <button class="button right" @click="changeName">Изменить имя</button>
           <button class="button delete" @click="toggleAdmin" v-if="userinfo.isAdmin && userinfo.email != $store.state.authUser.email">Убрать администратора</button>
           <button class="button" @click="toggleAdmin" v-if="!userinfo.isAdmin">Назначить администратором</button>
-          <button class="button delete full" v-if="selectedHeight[0]">Удалить выделленые записи</button>
+          <button class="button delete full" v-if="selectedHeight[0]" @click="deleteHeights">Удалить выделленые записи</button>
+          <button class="button delete bottom" v-if="userinfo.email != $store.state.authUser.email" @click="toggleModal">Удалить аккаунт</button>
         </div>
-        <pre v-if="selectedHeight">
-          {{selectedHeight}}
-        </pre>
       </div>
     </div>
   </section>
@@ -55,7 +62,8 @@ export default {
       userinfo: null,
       selectedHeight: [],
       heights: [],
-      username: ""
+      username: "",
+      showModal: false
     }
   },
 
@@ -86,6 +94,9 @@ export default {
       }
       this.username = this.userinfo.name
     },
+    async toggleModal(){
+      this.showModal = !this.showModal
+    },
     async toggleAdmin(){
       await this.$store.dispatch('toggleAdmin', {
         email: this.userinfo.email,
@@ -98,6 +109,21 @@ export default {
         name: this.username
       })
       this.getUserInfo()
+    },
+    async deleteHeights(){
+      await this.$store.dispatch('deleteHeights', {
+        id: this.selectedHeight
+      })
+      this.getUserInfo()
+    },
+    async deleteAccount(){
+      await this.$store.dispatch('deleteAccount', {
+        email: this.userinfo.email
+      })
+      this.userinfo = null
+      this.selected = "Поиск"
+      this.toggleModal();
+      this.getData()
     }
   },
   watch: {
@@ -115,6 +141,44 @@ export default {
 </script>
 
 <style scoped>
+.modal{
+  width: 100%;
+  height: 100vh;
+  background: rgba(35,41,214,0.3);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  transition: opacity .5s;
+}
+
+.modal-content{
+  background: #fff;
+  display: inline-block;
+  padding: 30px 60px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+}
+
+.modal-content .button{
+  margin-top: 10px;
+}
+
+.modal-content .button:last-child{
+  margin-left: 10px;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: all .2s;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
+}
+
 .admin{
   max-width: 1200px;
   padding: 20px 30px;
@@ -130,11 +194,18 @@ export default {
   grid-template-rows: 1fr;
   grid-template-columns: 1fr 1fr;
   grid-gap: 2vw;
+  position: relative;
 }
 
 .search {
   display: block;
   margin-bottom: 20px;
+}
+
+.button.bottom{
+  position: absolute;
+  bottom: 20px;
+  right: 0;
 }
 
 .edits {
@@ -199,6 +270,11 @@ export default {
 @media screen and (max-width: 980px){
   .button{
     width: 100%;
+  }
+
+  .button.bottom{
+    position: relative;
+    top: 10px;
   }
 }
 

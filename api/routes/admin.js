@@ -59,4 +59,36 @@ router.post('/admin/changeName', async function (req, res, next) {
   }
 })
 
+router.post('/admin/deleteHeights', async function (req, res, next) {
+  if(req.session.authUser){
+    var database = await Realm.open(
+      {path: 'heightschema.realm'},
+    );
+    database.write(() => {
+      for( id in req.body.id ){
+        let obj = database.objects('Height').filtered('id = "' + req.body.id[id] + '"')[0];
+        database.delete(obj);
+      }
+    })
+    res.json({})
+  } else {
+    res.status(401).json({ message: 'Ошибка' })
+  }
+})
+
+router.post('/admin/deleteAccount', async function (req, res, next) {
+  if(req.session.authUser){
+    var database = await Realm.open(
+      {path: 'heightschema.realm'},
+    );
+    database.write(() => {
+      let obj = database.objects('Users').filtered('email = "' + req.body.email + '"')[0];
+      database.delete(obj);
+    })
+    res.json({})
+  } else {
+    res.status(401).json({ message: 'Ошибка' })
+  }
+})
+
 module.exports = router

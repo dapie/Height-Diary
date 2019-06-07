@@ -92,6 +92,28 @@ export const actions = {
     }
   },
 
+  async deleteHeights({ commit }, { id }) {
+    try {
+      await axios.post('/api/admin/deleteHeights', {id})
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        throw new Error('Ошибка')
+      }
+      throw error
+    }
+  },
+
+  async deleteAccount({ commit }, { email }) {
+    try {
+      await axios.post('/api/admin/deleteAccount', {email})
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        throw new Error('Ошибка')
+      }
+      throw error
+    }
+  },
+
   async getUserInfo({ commit }, { id }) {
     try {
       const { data } = await axios.post('/api/admin/getUserInfo', { id })

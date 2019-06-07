@@ -23,10 +23,9 @@ router.post('/height', async function (req, res, next) {
       {path: 'heightschema.realm'},
     );
     let user = database.objects('Users').filtered('email = "' +req.session.authUser.email + '"')[0];
-    let objects = database.objects('Height');
-    let length = objects.length
-    if(objects[length-1]){
-      id = objects[length-1].id + 1;
+    let objects = database.objects('Height').sorted('id', true);
+    if(objects[0]){
+      id = objects[0].id + 1;
     } else {
       id = 0
     }
