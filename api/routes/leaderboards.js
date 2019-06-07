@@ -29,7 +29,8 @@ router.get('/leaderboards', async function (req, res, next) {
       }
     }
     let average = database.objects('Height').avg('height').toFixed(1)
-    res.json({top: top.slice(0,10), average: average, your: yourResult})
+    if(top.length > 10) top = top.slice(0,10)
+    res.json({top: top, average: average, your: yourResult})
   } else {
     res.status(401).json({ message: 'Ошибка' })
   }

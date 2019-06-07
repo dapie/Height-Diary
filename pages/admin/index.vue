@@ -1,9 +1,32 @@
 <template>
   <section class="admin">
     <Header active="1"></Header>
-    <div class="profile-info">
-      <img src="~/assets/img/person.png">
-      <h1 class="name">{{this.$store.state.authUser.name}}</h1>
+    <div class="grid">
+      <div class="column">
+        <div class="profile-info">
+          <h1 class="name">Пользователи</h1>
+          <v-select v-model="selected" :options="options" class="search"></v-select>
+          <select class="list" v-model="selectedHeight"  v-if="userinfo" multiple>
+            <option class="list-element" v-if="heights" v-for="height in heights" v-bind:value="height.id">{{height.text}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="column">
+        <div class="profile-info" v-if="userinfo">
+          <img src="~/assets/img/person.png">
+          <h1 class="name">{{userinfo.name}} [{{userinfo.email}}]</h1>
+        </div>
+        <div v-if="userinfo" class="edits">
+          <input class="nameInput" type="text" v-model="username"><br>
+          <button class="button right" @click="changeName">Изменить имя</button>
+          <button class="button delete" @click="toggleAdmin" v-if="userinfo.isAdmin && userinfo.email != $store.state.authUser.email">Убрать администратора</button>
+          <button class="button" @click="toggleAdmin" v-if="!userinfo.isAdmin">Назначить администратором</button>
+          <button class="button delete full" v-if="selectedHeight[0]">Удалить выделленые записи</button>
+        </div>
+        <pre v-if="selectedHeight">
+          {{selectedHeight}}
+        </pre>
+      </div>
     </div>
   </section>
 </template>
@@ -12,131 +35,76 @@
 import axios from '~/plugins/axios'
 import Header from '~/components/Header.vue'
 import LineChart from '~/plugins/LineChart.js'
+import VueSelect from '~/plugins/vue-select.js'
 
 export default {
   components: {
     Header,
-    LineChart
+    LineChart,
+    VueSelect
   },
   head () {
     return {
-      title: 'Rostik: Дневник'
+      title: 'Rostik: Панель администратора'
     }
   },
   data() {
     return {
-      loaded: false,
-      heights: null,
-      curHeight: 0,
-      isRunning: false,
-      interval: null,
-      heightEmpty: false,
-      height: null,
-      myHeight: 178,
-      selected: 'Последние',
-      lineData: {
-        labels: [],
-        datasets: [{
-            data: [],
-            backgroundColor: [
-                'rgba(35, 41, 214, 0.2)',
-            ],
-            borderColor: [
-                'rgba(35, 41, 214, 1)',
-            ],
-            pointBorderColor: [
-            'rgba(35, 41, 214, 1)',
-            ],
-            borderWidth: 1
-        }]
-    },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          yAxes: [{
-            display: true,
-            gridLines: {
-              display: true
-            },
-            scaleLabel: {
-              display: true,
-              labelString: 'Рост'
-            }
-          }],
-          xAxes: [{
-            gridLines: {
-              display: false
-            },
-            scaleLabel: {
-              display: true,
-              labelString: 'Дата'
-            }
-          }]
-        },
-        legend: {
-          display: false
-        },
-    }
+      selected: 'Поиск',
+      options: [],
+      userinfo: null,
+      selectedHeight: [],
+      heights: [],
+      username: ""
     }
   },
 
   methods: {
-    toggleTimer() {
-      if (this.isRunning) {
-        clearInterval(this.interval);
-      } else {
-        this.curHeight = 0;
-        this.interval = setInterval(this.incrementTime, 0);
-      }
-      this.isRunning = !this.isRunning
-    },
-    incrementTime() {
-      this.curHeight = parseInt(this.curHeight) + 1;
-      if(this.curHeight >= this.myHeight){
-        this.curHeight = this.myHeight;
-        this.toggleTimer();
-      }
-    },
     async getData() {
-      var date
-      await this.$store.dispatch('height')
-      var heights = Object.values(JSON.parse(JSON.stringify(this.$store.state.heights)))
-      heights = this.selected == 'Все' ? heights : heights.slice(-10);
-      this.lineData.labels = [];
-      this.lineData.datasets[0].data = [];
-      for(var el in heights){
-        date = new Date(heights[el].timestamp)
-        this.lineData.labels.push(('0' + date.getDate()).slice(-2)+'.'+('0' + date.getMonth()).slice(-2)+'.'+date.getFullYear())
-        this.lineData.datasets[0].data.push(heights[el].height)
-      }
-      var dataset = this.lineData.datasets[0].data;
-      this.myHeight =  dataset[dataset.length-1] ? dataset[dataset.length-1]: 0;
-      this.loaded = true
-      this.toggleTimer(); 
-    },
-    addHeight: async function (e){
-      e.preventDefault();
-      try {
-        this.heightEmpty = false;
-        if(!this.height || this.height < 0){
-          this.heightEmpty = true;
-          return
-        }
-        this.loaded = false;
-        await this.$store.dispatch('addHeight', {
-          height: this.height,
+      await this.$store.dispatch('getUsers')
+      var users = Object.values(JSON.parse(JSON.stringify(this.$store.state.users)))
+      var options = []
+      users.forEach(function(el){
+        options.push({
+          label: el.email + " <" + el.name + ">",
+          id: el.id
         })
-        this.getData();
-      } catch (error) {
-        this.errors = error.message
+      })
+      this.options = options
+    },
+    async getUserInfo(){
+      await this.$store.dispatch('getUserInfo', {
+        id: this.selected.id,
+      })
+      this.userinfo = this.$store.state.userinfo
+      this.heights = []
+      for(var id in this.userinfo.heights){
+        this.heights.push({
+          text: "["+this.userinfo.heights[id].timestamp+"] "+this.userinfo.heights[id].height,
+          id: this.userinfo.heights[id].id
+        })
       }
+      this.username = this.userinfo.name
+    },
+    async toggleAdmin(){
+      await this.$store.dispatch('toggleAdmin', {
+        email: this.userinfo.email,
+      })
+      this.getUserInfo()
+    },
+    async changeName(){
+      await this.$store.dispatch('changeName', {
+        email: this.userinfo.email,
+        name: this.username
+      })
+      this.getUserInfo()
     }
   },
   watch: {
     selected: function (val) {
-      this.loaded = false
-      this.getData()
+      if(this.selected != null)
+        this.selectedHeight = []
+        this.getUserInfo()
     },
   },
   mounted(){
@@ -152,51 +120,67 @@ export default {
   padding: 20px 30px;
   margin: 0 auto;
 }
-.average{
-  margin: 10px 0px;
-}
-.average .icon, .text{
-  display: inline-block;
+
+.nameInput {
+  width: 100%;
 }
 
-.icon {
-  width: 130px;
-}
-.text{
-  text-align: left;
-  color: #2329D6;
-  vertical-align: middle;
+.grid{
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 2vw;
 }
 
-.number{
-  font-size: 72px;
-  font-weight: bold;
+.search {
+  display: block;
+  margin-bottom: 20px;
 }
 
-.number span{
-  font-size: 48px;
-  margin-left: 10px;
+.edits {
+  margin-top: 10px;
 }
 
-.chartTitle{
-  color: #2329D6;
-  font-size: 18px;
-  display: inline-block;
+.full {
+  width: 100%;
 }
 
-.selectAmount{
-  margin-left: 10px;
+.edits .button{
+  margin-top: 10px;
 }
 
-.chart{
-    width: 100%;
-    position: relative;
-    padding: 30px 0;
-    display:inline-block;
+.right {
+  float: right;
+}
+
+.list {
+  background: #fff;
+  border: 1px solid #EBEBFF;
+  border-radius: 6px;
+  height: 400px;
+  display: block;
+  width: 100%;
+}
+
+.list-element{
+  border-bottom: 1px solid #EBEBFF;
+  height: 40px;
+  overflow: hidden;
+}
+
+.button.delete{
+  border: 1px solid #FF5252;
+  color: #FF5252;
+}
+
+.button.delete:hover{
+  border: 1px solid #FF5252;
+  background: #FF5252;
+  color: #fff;
 }
 
 .profile-info{
-  margin: 30px 0;
+  margin: 20px 0;
 }
 
 .profile-info img{
@@ -212,38 +196,16 @@ export default {
   vertical-align: middle;
 }
 
-#height {
-  width: 60px;
-  margin-left: 10px;
-}
-
-.form-label{
-  color: #2329D6;
-}
-
-#height-form{
-  margin: 20px 0;
-}
-
-#height-form .button{
-  margin-left: 10px;
-}
-
-.red{
-  border: 1px solid #ff0000;
+@media screen and (max-width: 980px){
+  .button{
+    width: 100%;
+  }
 }
 
 @media screen and (max-width: 680px) {
-  .average{
-    padding: 0;
-    margin: 0;
-    text-align: center;
-  }
-
-  .profile-info{
-    padding: 10px 0;
-    margin: 0;
-    text-align: center;
+  .grid{
+    display: block;
+    padding-bottom: 40px;
   }
 
   .profile-info .name{
@@ -290,7 +252,6 @@ export default {
     display: block;
     margin: 0 auto;
   }
-
 }
 
 </style>

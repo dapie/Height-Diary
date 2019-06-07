@@ -4,7 +4,8 @@ export const state = () => {
   return {
     authUser: null,
     heights: null,
-    leaderboards: null
+    leaderboards: null,
+    users: null
   }
 }
 
@@ -12,11 +13,17 @@ export const mutations = {
   SET_USER: function (state, user) {
     state.authUser = user
   },
+  SET_USERS: function (state, users) {
+    state.users = users
+  },
   SET_HEIGHTS: function (state, heights) {
     state.heights = heights
   },
   SET_LEADERBOARDS: function (state, leaderboards) {
     state.leaderboards = leaderboards
+  },
+  SET_USERINFO: function (state, userinfo) {
+    state.userinfo = userinfo
   }
 }
 
@@ -43,6 +50,52 @@ export const actions = {
     try {
       const { data } = await axios.get('/api/height')
       commit('SET_HEIGHTS', data)
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        throw new Error('Ошибка')
+      }
+      throw error
+    }
+  },
+
+  async getUsers({ commit }) {
+    try {
+      const { data } = await axios.get('/api/admin/getUsers')
+      commit('SET_USERS', data)
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        throw new Error('Ошибка')
+      }
+      throw error
+    }
+  },
+
+  async toggleAdmin({ commit }, { email }) {
+    try {
+      await axios.post('/api/admin/toggleAdmin', {email})
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        throw new Error('Ошибка')
+      }
+      throw error
+    }
+  },
+
+  async changeName({ commit }, { email, name }) {
+    try {
+      await axios.post('/api/admin/changeName', {email, name})
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        throw new Error('Ошибка')
+      }
+      throw error
+    }
+  },
+
+  async getUserInfo({ commit }, { id }) {
+    try {
+      const { data } = await axios.post('/api/admin/getUserInfo', { id })
+      commit('SET_USERINFO', data)
     } catch (error) {
       if (error.response && error.response.status === 401) {
         throw new Error('Ошибка')

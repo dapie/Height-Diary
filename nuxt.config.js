@@ -24,7 +24,7 @@ module.exports = {
   ** Add axios globally
   */
   build: {
-    vendor: ['axios'],
+    vendor: ['axios', 'vue-select'],
     /*
     ** Run ESLINT on save
     */
@@ -39,6 +39,9 @@ module.exports = {
       }
     }
   },
+  plugins: [
+    { src: '~plugins/vue-select', ssr: false }
+  ],
   serverMiddleware: [
     // API middleware
     session({

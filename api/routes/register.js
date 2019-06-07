@@ -12,7 +12,13 @@ router.post('/register', async function (req, res, next) {
     return res.status(401).json({ message: 'Email '+req.body.email+' занят.' })
   }
   var timestamp = new Date();
-  var id = database.objects('Users').length;
+  let objects = database.objects('Users');
+  let length = objects.length
+  if(objects[length-1]){
+    id = objects[length-1].id + 1;
+  } else {
+    id = 0
+  }
   let hash = bcrypt.hashSync(req.body.password, 10);
   database.write(() => {
     database.create('Users', {
@@ -20,7 +26,8 @@ router.post('/register', async function (req, res, next) {
       name: req.body.name, 
       email: req.body.email, 
       timestamp: timestamp, 
-      password: hash
+      password: hash,
+      isAdmin: false
     });
   });
   req.session.authUser = { email: req.body.email, name: req.body.name }
