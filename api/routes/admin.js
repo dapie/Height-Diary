@@ -20,10 +20,14 @@ router.post('/admin/getUserInfo', async function (req, res, next) {
     var database = await Realm.open(
       {path: 'heightschema.realm'},
     );
-    let user = database.objects('Users').filtered('id="'+req.body.id+'"')[0];
-    let heights = database.objects('Height').filtered('user_id="'+req.body.id+'"');
-    user.heights = heights
-    res.json(user)
+    if(req.body.id != undefined){
+      let user = database.objects('Users').filtered('id="'+req.body.id+'"')[0];
+      let heights = database.objects('Height').filtered('user_id="'+req.body.id+'"');
+      user.heights = heights
+      res.json(user)
+    } else {
+      res.json({})
+    }
   } else {
     res.status(401).json({ message: 'Ошибка' })
   }
@@ -83,6 +87,12 @@ router.post('/admin/deleteAccount', async function (req, res, next) {
     );
     database.write(() => {
       let obj = database.objects('Users').filtered('email = "' + req.body.email + '"')[0];
+      let heights = database.objects('Height').filtered('user_id = "' + obj.id + '"');
+      console.log(heights)
+      console.log(heights.length)
+      for(var i = 0; i < heights.length-1; i++){
+        database.delete(heights[i]);
+      }
       database.delete(obj);
     })
     res.json({})
