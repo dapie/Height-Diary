@@ -14,7 +14,7 @@
     "heroku-postbuild": "npm run build"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bcrypt": "^3.0.6",
     "chart.js": "^2.8.0",
     "cross-env": "^5.2.0",
